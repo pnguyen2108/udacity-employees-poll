@@ -31,8 +31,8 @@ const App = () => {
           <Route path="/leaderboard" element={<LeaderboardPage />} />
           <Route path="/add" element={<NewQuestionPage />} />
           <Route path="/questions/:question_id" element={<QuestionDetailPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Route>
-        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </AuthGuardComponent>
   </BrowserRouter>;

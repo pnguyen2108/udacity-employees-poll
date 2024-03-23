@@ -43,9 +43,9 @@ export const HomePage = () => {
 
     });
 
-    setAnsweredQuestions(_cloneDeep(answeredQuestions));
+    setAnsweredQuestions(_cloneDeep(answeredQuestions.reverse()));
 
-    setNewQuestions(_cloneDeep(unanswerQuestions));
+    setNewQuestions(_cloneDeep(unanswerQuestions.reverse()));
 
   }, [_getQuestions]);
 

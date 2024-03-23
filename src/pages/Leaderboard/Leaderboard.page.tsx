@@ -28,7 +28,8 @@ export const LeaderboardPage = () => {
       users.push({
         ...user,
         questionLength: user.questions.length,
-        answeredLength: Object.keys(user.answers).length
+        answeredLength: Object.keys(user.answers).length,
+        totalScore:user.questions.length + Object.keys(user.answers).length
       });
     });
 
@@ -60,12 +61,19 @@ export const LeaderboardPage = () => {
     );
   };
 
+  const totalScoreTemplate = (rowData: IUser) => {
+    return (
+        <span className="flex w-full justify-center items-center">{rowData.totalScore}</span>
+    );
+  };
+
   return <div className="card shadow-xl bg-white">
-    <DataTable value={users} sortField="answeredLength" sortOrder={-1}
+    <DataTable value={users} sortField="totalScore" sortOrder={-1}
                loading={_loadingUsers} tableStyle={{ minWidth: "50rem" }}>
-      <Column field="users" body={userTemplate} header="UsersModel" style={{ width: "70%" }}></Column>
+      <Column field="users" body={userTemplate} header="UsersModel" style={{ width: "55%" }}></Column>
       <Column field="answeredLength" body={answeredTemplate} header="Answered" sortable style={{ width: "15%" }}></Column>
       <Column field="questionLength" body={createdTemplate} header="Created" sortable style={{ width: "15%" }}></Column>
+      <Column field="totalScore" body={totalScoreTemplate} header="Total Score" sortable style={{ width: "15%" }}></Column>
     </DataTable>
   </div>;
 };
