@@ -10,7 +10,7 @@ export type AuthState = {
   isLoading: boolean,
 };
 
-const initialState: AuthState = {
+export const authInitialState: AuthState = {
   isAuthenticated: false,
   userData: null,
   isLoading: false
@@ -25,10 +25,9 @@ export const authLogin = createAsyncThunk(
 
 export const authSlice = createSlice({
   name: "auth",
-  initialState,
+  initialState: authInitialState,
   reducers: {
     logout: (state: AuthState) => {
-      window.history.replaceState({}, "");
 
       return {
         ...state,

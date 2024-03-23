@@ -4,7 +4,7 @@ import {InputText} from "primereact/inputtext";
 import {useRef, useState} from "react";
 import {Button} from "primereact/button";
 import {Toast} from "primereact/toast";
-import {addAnswer} from "../../store/questionsSlice.store";
+import {addQuestion} from "../../store/questionsSlice.store";
 import {useNavigate} from "react-router-dom";
 
 export const NewQuestionPage = () => {
@@ -53,7 +53,7 @@ export const NewQuestionPage = () => {
 
 
 
-        dispatch(addAnswer({
+        dispatch(addQuestion({
             author: _currUser.id,
             optionOneText: firstOption,
             optionTwoText: secondOption

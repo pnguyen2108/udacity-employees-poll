@@ -76,12 +76,12 @@ export const QuestionDetailPage = () => {
                 return;
             }
 
-            if(optionValue === 'optionOne') {
-                setOptionOne([...optionOne,_currUser.id])
+            if (optionValue === 'optionOne') {
+                setOptionOne([...optionOne, _currUser.id])
             }
 
-            if(optionValue === 'optionTwo') {
-                setOptionTwo([...optionTwo,_currUser.id])
+            if (optionValue === 'optionTwo') {
+                setOptionTwo([...optionTwo, _currUser.id])
             }
 
             setIsSelected(optionValue);
@@ -127,12 +127,18 @@ export const QuestionDetailPage = () => {
 
                     <div className="grid grid-cols-2 gap-x-[180px]">
                         <div className="flex flex-col justify-center items-center">
-                            <div className="flex cursor-pointer">
-                                <Checkbox onChange={() => onClickCheckbox("optionOne")} inputId="optionOne"
-                                          checked={isSelected === "optionOne"}/>
-
-                                <label htmlFor="optionOne" className="ml-2">{_questionDetail?.optionOne.text}</label>
+                            <div
+                                onClick={() => onClickCheckbox('optionOne')}
+                                className=
+                                    {`flex cursor-pointer border hover hover:scale-105  shadow-xl rounded-md p-3 
+                                    ${isSelected === 'optionOne' ? 'bg-violet-600 text-white' : 'border-gray-400 '}
+                                    `}
+                            >
+                                <label htmlFor="optionOne"
+                                       className="ml-2 cursor-pointer">{_questionDetail?.optionOne.text}</label>
                             </div>
+
+
 
                             <div className=" flex flex-col justify-center items-center gap-2 mt-5">
                                 <Knob disabled value={calcOptionOne()} valueTemplate={"{value}%"}/>
@@ -140,11 +146,15 @@ export const QuestionDetailPage = () => {
                         </div>
 
                         <div className="flex flex-col justify-center items-center">
-                            <div className="flex cursor-pointer">
-                                <Checkbox onChange={() => onClickCheckbox("optionTwo")} inputId="optionTwo"
-                                          checked={isSelected === "optionTwo"}/>
-
-                                <label htmlFor="optionTwo" className="ml-2">{_questionDetail?.optionTwo.text}</label>
+                            <div
+                                onClick={() => onClickCheckbox('optionTwo')}
+                                className=
+                                    {`flex cursor-pointer border hover hover:scale-105  shadow-xl rounded-md p-3 
+                                    ${isSelected === 'optionTwo' ? 'bg-violet-600 text-white' : 'border-gray-400 '}
+                                    `}
+                                >
+                                <label htmlFor="optionTwo"
+                                       className="ml-2 cursor-pointer">{_questionDetail?.optionTwo.text}</label>
                             </div>
 
                             <div className=" flex flex-col justify-center items-center gap-2 mt-5">
@@ -159,8 +169,9 @@ export const QuestionDetailPage = () => {
                         <div className=" mt-3 flex flex-col justify-start items-center gap-3 ">
                             {
                                 optionOne &&
-                                optionOne.map((item: string) =>
-                                    <p><span className="font-semibold">{item}</span> has voted for this option</p>
+                                optionOne.map((item: string, index: number) =>
+                                    <p key={index}><span className="font-semibold">{item}</span> has voted for this option
+                                    </p>
                                 )
                             }
                         </div>
@@ -168,8 +179,9 @@ export const QuestionDetailPage = () => {
                         <div className=" mt-3 flex flex-col justify-start items-center gap-3 ">
                             {
                                 optionTwo &&
-                                optionTwo.map((item: string) =>
-                                    <p><span className="font-semibold">{item}</span> has voted for this option</p>
+                                optionTwo.map((item: string, index: number) =>
+                                    <p key={index}><span className="font-semibold">{item}</span> has voted for this option
+                                    </p>
                                 )
                             }
                         </div>

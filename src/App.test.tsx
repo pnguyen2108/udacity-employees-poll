@@ -1,105 +1,162 @@
-import { screen, waitFor } from "@testing-library/react"
-import App from "./App"
-import { renderWithProviders } from "./utils/test-utils"
+import {describe, expect} from "vitest";
+import {store} from "./app/store";
+import {fetchUsers, userInitialState} from "./store/usersSlice.store";
+import {questions, users} from "../_DATA";
+import {authInitialState, authLogin, logout} from "./store/authSlice.store";
+import {addQuestion, fetchQuestions, questionsInitialState, setQuestionAnswer} from "./store/questionsSlice.store";
+import {IQuestionAnswer, IQuestionFormat} from "./modes/questions.model";
+import {fireEvent, getByText, render} from "@testing-library/react";
+import React from "react";
+import {Provider} from "react-redux";
+import App from "./App";
 
-test("AppLayout should have correct initial render", () => {
-  renderWithProviders(<App />)
+describe('App', () => {
+    describe('Redux auth state test', () => {
+        it('auth init state test', async () => {
+            expect(store.getState().auth).toEqual(authInitialState)
+        });
 
-  // The app should be rendered correctly
-  expect(screen.getByText(/learn/i)).toBeInTheDocument()
+        it('login test', async () => {
+            await store.dispatch(authLogin({
+                username: users.sarahedo.id,
+                password: users.sarahedo.password
+            }));
 
-  // Initial state: count should be 0, incrementValue should be 2
-  expect(screen.getByLabelText("Count")).toHaveTextContent("0")
-  expect(screen.getByLabelText("Set increment amount")).toHaveValue(2)
-})
+            expect(store.getState().auth?.userData).toEqual(users.sarahedo)
+        })
 
-test("Increment value and Decrement value should work as expected", async () => {
-  const { user } = renderWithProviders(<App />)
+        it('logout test', () => {
+            store.dispatch(logout())
 
-  // Click on "+" => Count should be 1
-  await user.click(screen.getByLabelText("Increment value"))
-  expect(screen.getByLabelText("Count")).toHaveTextContent("1")
+            expect(store.getState().auth).toEqual(authInitialState)
+        })
+    })
 
-  // Click on "-" => Count should be 0
-  await user.click(screen.getByLabelText("Decrement value"))
-  expect(screen.getByLabelText("Count")).toHaveTextContent("0")
-})
+    describe('Redux users state test', () => {
+        it('user init state test', async () => {
+            expect(store.getState().users).toEqual(userInitialState)
+        });
 
-test("Add Amount should work as expected", async () => {
-  const { user } = renderWithProviders(<App />)
+        it('fetchUsers test', async () => {
+            await store.dispatch(fetchUsers());
 
-  // "Add Amount" button is clicked => Count should be 2
-  await user.click(screen.getByText("Add Amount"))
-  expect(screen.getByLabelText("Count")).toHaveTextContent("2")
+            expect(store.getState().users?.users).toEqual(Object.values(users))
+        })
+    })
 
-  const incrementValueInput = screen.getByLabelText("Set increment amount")
-  // incrementValue is 2, click on "Add Amount" => Count should be 4
-  await user.clear(incrementValueInput)
-  await user.type(incrementValueInput, "2")
-  await user.click(screen.getByText("Add Amount"))
-  expect(screen.getByLabelText("Count")).toHaveTextContent("4")
+    describe('Redux questions state test', () => {
+        it('questions init state test', async () => {
+            expect(store.getState().questions).toEqual(questionsInitialState)
+        });
 
-  // [Negative number] incrementValue is -1, click on "Add Amount" => Count should be 3
-  await user.clear(incrementValueInput)
-  await user.type(incrementValueInput, "-1")
-  await user.click(screen.getByText("Add Amount"))
-  expect(screen.getByLabelText("Count")).toHaveTextContent("3")
-})
+        it('fetchQuestions test', async () => {
+            await store.dispatch(fetchQuestions());
 
-it("Add Async should work as expected", async () => {
-  const { user } = renderWithProviders(<App />)
+            expect(store.getState().questions?.questions).toEqual(questions)
+        })
 
-  // "Add Async" button is clicked => Count should be 2
-  await user.click(screen.getByText("Add Async"))
+        it('saveQuestionAnswer success test', async () => {
+            const questionId = "am8ehyc8byjqgar0jgpub9"
 
-  await waitFor(() =>
-    expect(screen.getByLabelText("Count")).toHaveTextContent("2"),
-  )
+            const question = questions[questionId]
 
-  const incrementValueInput = screen.getByLabelText("Set increment amount")
-  // incrementValue is 2, click on "Add Async" => Count should be 4
-  await user.clear(incrementValueInput)
-  await user.type(incrementValueInput, "2")
+            const answer: IQuestionAnswer = {
+                qid: questionId,
+                authedUser: users.johndoe.id,
+                answer: 'optionTwo'
+            }
 
-  await user.click(screen.getByText("Add Async"))
-  await waitFor(() =>
-    expect(screen.getByLabelText("Count")).toHaveTextContent("4"),
-  )
+            const currOptionTwoVotes = question.optionTwo.votes.length;
 
-  // [Negative number] incrementValue is -1, click on "Add Async" => Count should be 3
-  await user.clear(incrementValueInput)
-  await user.type(incrementValueInput, "-1")
-  await user.click(screen.getByText("Add Async"))
-  await waitFor(() =>
-    expect(screen.getByLabelText("Count")).toHaveTextContent("3"),
-  )
-})
+            await store.dispatch(setQuestionAnswer(answer))
 
-test("Add If Odd should work as expected", async () => {
-  const { user } = renderWithProviders(<App />)
+            const stateQuestion = store.getState().questions?.questions[questionId]
 
-  // "Add If Odd" button is clicked => Count should stay 0
-  await user.click(screen.getByText("Add If Odd"))
-  expect(screen.getByLabelText("Count")).toHaveTextContent("0")
+            expect(stateQuestion.optionTwo.votes.length).toBeGreaterThan(currOptionTwoVotes)
 
-  // Click on "+" => Count should be updated to 1
-  await user.click(screen.getByLabelText("Increment value"))
-  expect(screen.getByLabelText("Count")).toHaveTextContent("1")
+        })
 
-  // "Add If Odd" button is clicked => Count should be updated to 3
-  await user.click(screen.getByText("Add If Odd"))
-  expect(screen.getByLabelText("Count")).toHaveTextContent("3")
+        it('saveQuestionAnswer failed test', async () => {
+            const questionId = "am8ehyc8byjqgar0jgpub9"
 
-  const incrementValueInput = screen.getByLabelText("Set increment amount")
-  // incrementValue is 1, click on "Add If Odd" => Count should be updated to 4
-  await user.clear(incrementValueInput)
-  await user.type(incrementValueInput, "1")
-  await user.click(screen.getByText("Add If Odd"))
-  expect(screen.getByLabelText("Count")).toHaveTextContent("4")
+            const question = questions[questionId]
 
-  // click on "Add If Odd" => Count should stay 4
-  await user.clear(incrementValueInput)
-  await user.type(incrementValueInput, "-1")
-  await user.click(screen.getByText("Add If Odd"))
-  expect(screen.getByLabelText("Count")).toHaveTextContent("4")
-})
+            const answer: IQuestionAnswer = {
+                qid: questionId,
+                authedUser: '111',
+                answer: 'optionTwo'
+            }
+
+            const currOptionTwoVotes = question.optionTwo.votes.length;
+
+            await store.dispatch(setQuestionAnswer(answer))
+
+            const stateQuestion = store.getState().questions?.questions[questionId]
+
+            expect(stateQuestion.optionTwo.votes.length).toEqual(currOptionTwoVotes)
+
+        })
+
+        it('saveQuestion success test', async () => {
+            const question: IQuestionFormat = {
+                author: users.johndoe.id,
+                optionOneText: 'optionOne',
+                optionTwoText: 'optionTwo'
+            }
+
+            const currQuestionsLength = Object.keys(questions).length
+
+            await store.dispatch(addQuestion(question))
+
+            const stateQuestionsLength = Object.keys(store.getState().questions?.questions).length;
+
+            expect(stateQuestionsLength).toBeGreaterThan(currQuestionsLength)
+        })
+
+        it('saveQuestion failed test', async () => {
+            const question: IQuestionFormat = {
+                author: '222',
+                optionOneText: 'optionOne',
+                optionTwoText: 'optionTwo'
+            }
+
+            const currQuestionsLength = Object.keys(questions).length
+
+            await store.dispatch(addQuestion(question))
+
+            const stateQuestionsLength = Object.keys(store.getState().questions?.questions).length;
+
+            expect(stateQuestionsLength).toEqual(currQuestionsLength)
+        })
+    })
+
+    describe('Render test', () => {
+        it('init page render test', async () => {
+            const initAppContainer = render(
+                <React.StrictMode>
+                    <Provider store={store}>
+                        <App/>
+                    </Provider>
+                </React.StrictMode>
+            );
+
+            expect(initAppContainer).toMatchSnapshot();
+        });
+
+        it('fireEvent test', () => {
+            const initAppContainer = render(
+                <React.StrictMode>
+                    <Provider store={store}>
+                        <App/>
+                    </Provider>
+                </React.StrictMode>
+            );
+
+            const button = initAppContainer.getByText('Login')
+
+            fireEvent.click(button)
+
+            expect(initAppContainer.getByText('Login')).toBeDefined()
+        });
+    })
+});

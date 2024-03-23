@@ -9,7 +9,7 @@ export type UsersState = {
   userDetail: IUser | null
 };
 
-const initialState: UsersState = {
+export const userInitialState: UsersState = {
   loadingUserDetail: false,
   loadingUsers: false,
   users: [],
@@ -33,7 +33,7 @@ export const fetchUserDetail = createAsyncThunk(
 
 export const usersSlice = createSlice({
   name: "users",
-  initialState,
+  initialState: userInitialState,
   reducers: {},
   selectors: {
     getUsers: (state) => {

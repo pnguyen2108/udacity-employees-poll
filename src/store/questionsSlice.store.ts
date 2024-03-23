@@ -1,6 +1,6 @@
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
+import {createAsyncThunk, createSlice, isRejectedWithValue} from "@reduxjs/toolkit";
 import type {IQuestion, IQuestionAnswer, IQuestionFormat, IQuestions} from "../modes/questions.model";
-import {_getQuestionDetail, _getQuestions, _saveQuestion, _saveQuestionAnswer} from "../../_DATA";
+import {_getQuestionDetail, _getQuestions, _saveQuestion, _saveQuestionAnswer, questions} from "../../_DATA";
 
 export type QuestionState = {
     questions: IQuestions,
@@ -11,7 +11,7 @@ export type QuestionState = {
     loadingQuestions: boolean
 };
 
-const initialState: QuestionState = {
+export const questionsInitialState: QuestionState = {
     questions: {},
     questionDetail: null,
     status: "empty",
@@ -37,13 +37,13 @@ export const fetchQuestionDetail = createAsyncThunk(
 export const setQuestionAnswer = createAsyncThunk(
     "auth/setQuestionAnswer",
     async (data: IQuestionAnswer) => {
-        return await _saveQuestionAnswer(data);
+        return await _saveQuestionAnswer(data)
     }
 );
 
 
-export const addAnswer = createAsyncThunk(
-    "auth/addAnswer",
+export const addQuestion = createAsyncThunk(
+    "auth/addQuestion",
     async (data: IQuestionFormat) => {
         return await _saveQuestion(data);
     }
@@ -51,7 +51,7 @@ export const addAnswer = createAsyncThunk(
 
 export const questionsSlice = createSlice({
     name: "questions",
-    initialState,
+    initialState: questionsInitialState,
     reducers: {},
     selectors: {
         getQuestions: (state) => {
@@ -100,24 +100,32 @@ export const questionsSlice = createSlice({
         // set question answer
         builder
             .addCase(setQuestionAnswer.pending, (state: QuestionState) => {
+
                 state.loadingSaveAnswer = true;
             })
             .addCase(setQuestionAnswer.fulfilled, (state: QuestionState, action: any) => {
+                state.questions = action.payload;
+
                 state.loadingDetail = false;
             })
             .addCase(setQuestionAnswer.rejected, (state: QuestionState) => {
+
                 state.loadingSaveAnswer = false;
             });
 
         // add question
         builder
-            .addCase(addAnswer.pending, (state: QuestionState) => {
+            .addCase(addQuestion.pending, (state: QuestionState) => {
+
                 state.loadingSaveAnswer = true;
             })
-            .addCase(addAnswer.fulfilled, (state: QuestionState, action: any) => {
+            .addCase(addQuestion.fulfilled, (state: QuestionState, action: any) => {
+                state.questions = action.payload;
+
                 state.loadingDetail = false;
             })
-            .addCase(addAnswer.rejected, (state: QuestionState) => {
+            .addCase(addQuestion.rejected, (state: QuestionState) => {
+
                 state.loadingSaveAnswer = false;
             });
     }
