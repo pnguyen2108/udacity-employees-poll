@@ -1,6 +1,6 @@
-import type {IQuestionAnswer, IQuestionFormat, IQuestions} from "./src/modes/questions.model";
+import type {IQuestionAnswer, IQuestionFormat, IQuestions} from "./src/models/questions.model";
 import {formatQuestion} from "./src/helpers/control.helpers";
-import type {IUser, IUsers} from "./src/modes/users.model";
+import type {IUser, IUsers} from "./src/models/users.model";
 import {isNil as _isNil} from "lodash"
 
 export let questions: IQuestions = {

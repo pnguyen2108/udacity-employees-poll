@@ -1,7 +1,7 @@
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { ILogin } from "../modes/auth.model";
-import type { IUser } from "../modes/users.model";
+import type { ILogin } from "../models/auth.model";
+import type { IUser } from "../models/users.model";
 import { setLogin } from "../../_DATA";
 
 export type AuthState = {

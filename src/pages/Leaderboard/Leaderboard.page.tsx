@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import type { IUser } from "../../modes/users.model";
+import type { IUser } from "../../models/users.model";
 import { useEffect, useState } from "react";
 import { fetchUsers, getUsers } from "../../store/usersSlice.store";
 

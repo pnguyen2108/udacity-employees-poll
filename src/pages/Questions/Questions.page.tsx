@@ -1,4 +1,4 @@
-import { IQuestion } from "../../modes/questions.model";
+import { IQuestion } from "../../models/questions.model";
 import { QuestionComponent } from "../../components/Question/Question.component";
 import { useAppSelector } from "../../app/hooks";
 import { ProgressSpinner } from "primereact/progressspinner";

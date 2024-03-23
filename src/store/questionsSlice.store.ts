@@ -1,5 +1,5 @@
 import {createAsyncThunk, createSlice, isRejectedWithValue} from "@reduxjs/toolkit";
-import type {IQuestion, IQuestionAnswer, IQuestionFormat, IQuestions} from "../modes/questions.model";
+import type {IQuestion, IQuestionAnswer, IQuestionFormat, IQuestions} from "../models/questions.model";
 import {_getQuestionDetail, _getQuestions, _saveQuestion, _saveQuestionAnswer, questions} from "../../_DATA";
 
 export type QuestionState = {

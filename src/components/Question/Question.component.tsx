@@ -1,4 +1,4 @@
-import type { IQuestion } from "../../modes/questions.model";
+import type { IQuestion } from "../../models/questions.model";
 import moment from "moment";
 import { Link } from "react-router-dom";
 

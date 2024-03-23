@@ -1,7 +1,7 @@
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { useEffect, useState } from "react";
 import { TabPanel, TabView } from "primereact/tabview";
-import type { IQuestion } from "../../modes/questions.model";
+import type { IQuestion } from "../../models/questions.model";
 import { cloneDeep as _cloneDeep } from "lodash";
 import { QuestionsPage } from "../Questions/Questions.page";
 import { fetchQuestions } from "../../store/questionsSlice.store";

@@ -2,7 +2,7 @@ import { MegaMenu } from "primereact/megamenu";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { Avatar } from "primereact/avatar";
 import { useEffect, useState } from "react";
-import type { IUser } from "../../modes/users.model";
+import type { IUser } from "../../models/users.model";
 import { Link } from "react-router-dom";
 import { logout } from "../../store/authSlice.store";
 import "primereact/resources/themes/lara-light-indigo/theme.css";

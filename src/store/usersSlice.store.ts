@@ -1,4 +1,4 @@
-import type { IUser } from "../modes/users.model";
+import type { IUser } from "../models/users.model";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { _getAllUsers, _getUserDetail } from "../../_DATA";
 

@@ -4,7 +4,7 @@ import {fetchUsers, userInitialState} from "./store/usersSlice.store";
 import {questions, users} from "../_DATA";
 import {authInitialState, authLogin, logout} from "./store/authSlice.store";
 import {addQuestion, fetchQuestions, questionsInitialState, setQuestionAnswer} from "./store/questionsSlice.store";
-import {IQuestionAnswer, IQuestionFormat} from "./modes/questions.model";
+import {IQuestionAnswer, IQuestionFormat} from "./models/questions.model";
 import {fireEvent, getByText, render} from "@testing-library/react";
 import React from "react";
 import {Provider} from "react-redux";
