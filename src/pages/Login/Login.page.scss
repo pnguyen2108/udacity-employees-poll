@@ -1,0 +1,8 @@
+.p-password-input{
+  @apply w-full rounded-md border-gray-300 border h-10 px-2;
+}
+
+.p-toast{
+  width: fit-content !important;
+  max-width: 800px !important;
+}
