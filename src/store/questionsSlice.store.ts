@@ -1,105 +1,124 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { IQuestion, IQuestionAnswer, IQuestions } from "../modes/questions.model";
-import { _getQuestionDetail, _getQuestions, _saveQuestionAnswer } from "../../_DATA";
+import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
+import type {IQuestion, IQuestionAnswer, IQuestionFormat, IQuestions} from "../modes/questions.model";
+import {_getQuestionDetail, _getQuestions, _saveQuestion, _saveQuestionAnswer} from "../../_DATA";
 
 export type QuestionState = {
-  questions: IQuestions,
-  questionDetail: IQuestion | null,
-  status: string,
-  loadingDetail: boolean
-  loadingSaveAnswer: boolean
-  loadingQuestions: boolean
+    questions: IQuestions,
+    questionDetail: IQuestion | null,
+    status: string,
+    loadingDetail: boolean
+    loadingSaveAnswer: boolean
+    loadingQuestions: boolean
 };
 
 const initialState: QuestionState = {
-  questions: {},
-  questionDetail: null,
-  status: "empty",
-  loadingQuestions: false,
-  loadingDetail: false,
-  loadingSaveAnswer: false
+    questions: {},
+    questionDetail: null,
+    status: "empty",
+    loadingQuestions: false,
+    loadingDetail: false,
+    loadingSaveAnswer: false
 };
 
 export const fetchQuestions = createAsyncThunk(
-  "auth/fetchQuestions",
-  async () => {
-    return await _getQuestions();
-  }
+    "auth/fetchQuestions",
+    async () => {
+        return await _getQuestions();
+    }
 );
 
 export const fetchQuestionDetail = createAsyncThunk(
-  "auth/fetchQuestionDetial",
-  async (questionId: string) => {
-    return await _getQuestionDetail(questionId);
-  }
+    "auth/fetchQuestionDetial",
+    async (questionId: string) => {
+        return await _getQuestionDetail(questionId);
+    }
 );
 
 export const setQuestionAnswer = createAsyncThunk(
-  "auth/setQuestionAnswer",
-  async (data: IQuestionAnswer) => {
-    return await _saveQuestionAnswer(data);
-  }
+    "auth/setQuestionAnswer",
+    async (data: IQuestionAnswer) => {
+        return await _saveQuestionAnswer(data);
+    }
 );
 
 
-export const questionsSlice = createSlice({
-  name: "questions",
-  initialState,
-  reducers: {},
-  selectors: {
-    getQuestions: (state) => {
-      return state.questions;
-    },
-    getQuestionDetail: (state) => {
-      return state.questions;
+export const addAnswer = createAsyncThunk(
+    "auth/addAnswer",
+    async (data: IQuestionFormat) => {
+        return await _saveQuestion(data);
     }
-  },
-  extraReducers: (builder) => {
-    // fetch question list
-    builder
-      .addCase(fetchQuestions.pending, (state: QuestionState) => {
-        state.loadingQuestions = true;
+);
 
-        state.status = "empty";
-      })
-      .addCase(fetchQuestions.fulfilled, (state: QuestionState, action: any) => {
+export const questionsSlice = createSlice({
+    name: "questions",
+    initialState,
+    reducers: {},
+    selectors: {
+        getQuestions: (state) => {
+            return state.questions;
+        },
+        getQuestionDetail: (state) => {
+            return state.questions;
+        }
+    },
+    extraReducers: (builder) => {
+        // fetch question list
+        builder
+            .addCase(fetchQuestions.pending, (state: QuestionState) => {
+                state.loadingQuestions = true;
 
-        state.questions = action.payload;
+                state.status = "empty";
+            })
+            .addCase(fetchQuestions.fulfilled, (state: QuestionState, action: any) => {
 
-        state.status = "loaded";
+                state.questions = action.payload;
 
-        state.loadingQuestions = false;
-      })
-      .addCase(fetchQuestions.rejected, (state: QuestionState) => {
-        state.loadingQuestions = false;
+                state.status = "loaded";
 
-        state.status = "empty";
-      });
+                state.loadingQuestions = false;
+            })
+            .addCase(fetchQuestions.rejected, (state: QuestionState) => {
+                state.loadingQuestions = false;
 
-    // fetch question detail
-    builder
-      .addCase(fetchQuestionDetail.pending, (state: QuestionState) => {
-        state.loadingDetail = true;
-      })
-      .addCase(fetchQuestionDetail.fulfilled, (state: QuestionState, action: any) => {
-        state.questionDetail = action.payload;
+                state.status = "empty";
+            });
 
-        state.loadingDetail = false;
-      })
-      .addCase(fetchQuestionDetail.rejected, (state: QuestionState) => {
-        state.loadingDetail = false;
-      });
+        // fetch question detail
+        builder
+            .addCase(fetchQuestionDetail.pending, (state: QuestionState) => {
+                state.loadingDetail = true;
+            })
+            .addCase(fetchQuestionDetail.fulfilled, (state: QuestionState, action: any) => {
+                state.questionDetail = action.payload;
 
-    // set question answer
-    builder
-      .addCase(setQuestionAnswer.pending, (state: QuestionState) => {
-        state.loadingSaveAnswer = true;
-      })
-      .addCase(setQuestionAnswer.fulfilled, (state: QuestionState, action: any) => {
-        state.loadingDetail = false;
-      })
-      .addCase(setQuestionAnswer.rejected, (state: QuestionState) => {
-        state.loadingSaveAnswer = false;
-      });
-  }
+                state.loadingDetail = false;
+            })
+            .addCase(fetchQuestionDetail.rejected, (state: QuestionState) => {
+                state.loadingDetail = false;
+            });
+
+        // set question answer
+        builder
+            .addCase(setQuestionAnswer.pending, (state: QuestionState) => {
+                state.loadingSaveAnswer = true;
+            })
+            .addCase(setQuestionAnswer.fulfilled, (state: QuestionState, action: any) => {
+                state.loadingDetail = false;
+            })
+            .addCase(setQuestionAnswer.rejected, (state: QuestionState) => {
+                state.loadingSaveAnswer = false;
+            });
+
+        // add question
+        builder
+            .addCase(addAnswer.pending, (state: QuestionState) => {
+                state.loadingSaveAnswer = true;
+            })
+            .addCase(addAnswer.fulfilled, (state: QuestionState, action: any) => {
+                state.loadingDetail = false;
+            })
+            .addCase(addAnswer.rejected, (state: QuestionState) => {
+                state.loadingSaveAnswer = false;
+            });
+    }
 });

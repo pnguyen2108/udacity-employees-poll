@@ -179,7 +179,7 @@ export const _getQuestionDetail = (questionId: string) => {
 };
 
 
-export const _saveQuestion = (question: IQuestionFormat, questions: IQuestionFormat[]) => {
+export const _saveQuestion = (question: IQuestionFormat) => {
   return new Promise((res) => {
     const authedUser: string = question.author;
 
